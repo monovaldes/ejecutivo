@@ -1,0 +1,19 @@
+{
+  "name": "ejecutivo",
+  "version": "1.0.0",
+  "description": "EjecutivoAPI",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node app.js"
+  },
+  "author": "Iván Valdés R. <monovaldes@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/speech": "^6.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "googleapis": "^128.0.0",
+    "multer": "^1.4.5-lts.1"
+  }
+}

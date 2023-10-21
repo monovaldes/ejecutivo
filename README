@@ -1,0 +1,11 @@
+Ejecutivo is an voice-interactive game designed to train your executive brain functions.
+
+The objective of the game is, based on a predefined list of 40 words, the player records 1 minute of his voice.
+This 1 minute is sent over to the Google Speech API, transcribed, and compared against the 40 words, to test the user's
+memory remembering them.
+
+The backend server will be a Docker container based express.js server, deployed onto google cloud, it uses the following services:
+- Flutter authentication for verification
+- Google speech API
+
+The fronted will be vanilla JS, with tailwind CSS, an app that uses Flutter Authentication to login, records the user voice for a minute on a button click, and sends off the recording to the backend to get a result. It will be hosted on google cloud.
