@@ -19,7 +19,7 @@ recordButton.addEventListener('click', () => {
       // Stop recording after 59 seconds
       setTimeout(() => {
         mediaRecorder.stop();
-      }, 59000);
+      }, 60000);
       
       mediaRecorder.addEventListener('dataavailable', e => {
         chunks.push(e.data);
