@@ -90,7 +90,7 @@ if (encodingsDiv) {
   const encodingList = document.createElement('ul');
 
   // Check each MIME type for support using isTypeSupported()
-  const mimeTypes = ['audio/webm', 'audio/ogg', 'audio/wav', 'audio/mpeg'];
+  const mimeTypes = ['audio/webm', 'audio/ogg', 'audio/wav', 'audio/mpeg', 'audio/mp4', 'audio/aac'];
   mimeTypes.forEach((mimeType) => {
     const isSupported = MediaRecorder.isTypeSupported(mimeType);
     const listItem = document.createElement('li');
