@@ -28,7 +28,7 @@ recordButton.addEventListener('click', () => {
   navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
       recordButton.innerText = 'Stop';
-      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/ogg; codecs=opus' });
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/mp4' });
       mediaRecorder.start();
       chunks = [];
 
