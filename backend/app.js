@@ -16,6 +16,10 @@ const bucket = storage.bucket('ejecutivoaudiofiles');
 
 app.use(cors());
 
+app.get('/', (req, res) => {
+  res.redirect('https://www.doctoralia.cl/camila-guerra/psicologo/santiago');
+})
+
 app.post('/', upload.single('audio'), async (req, res) => {
   try {
     // Simple API Key authentication
@@ -42,8 +46,8 @@ app.post('/', upload.single('audio'), async (req, res) => {
       uri: 'gs://ejecutivoaudiofiles/audio.webm'
     };
     const config = {
-      encoding: 'WEBM_OPUS',
-      sampleRateHertz: '16000',
+      encoding: req.body.encoding || 'AAC',
+      sampleRateHertz: req.body.sample_rate || '44100',
       languageCode: 'es-CL',
     };
 

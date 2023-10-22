@@ -46,6 +46,10 @@ recordButton.addEventListener('click', () => {
         const formData = new FormData();
         formData.append('api_key', apiKey.value);
         formData.append('audio', blob, 'recording.webm');
+        if(/Macintosh/.test(navigator.userAgent) && /Firefox/.test(navigator.userAgent)) {
+          formData.append('encoding', 'WEBM_OPUS');
+          formData.append('sample_rate', '16000');
+        }
         
         fetch('https://ejecutivoapi.camiguerra.cl', {
           method: 'POST',
