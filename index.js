@@ -81,3 +81,23 @@ recordButton.addEventListener('click', () => {
       console.error('Error:', error);
     });
 });
+
+const encodingsDiv = document.getElementById('encodings');
+
+// Check if the 'encodings' div exists
+if (encodingsDiv) {
+  // Create a list element for supported encodings
+  const encodingList = document.createElement('ul');
+
+  // Check each MIME type for support using isTypeSupported()
+  const mimeTypes = ['audio/webm', 'audio/ogg', 'audio/wav', 'audio/mpeg'];
+  mimeTypes.forEach((mimeType) => {
+    const isSupported = MediaRecorder.isTypeSupported(mimeType);
+    const listItem = document.createElement('li');
+    listItem.textContent = `${mimeType}: ${isSupported ? 'Supported' : 'Not Supported'}`;
+    encodingList.appendChild(listItem);
+  });
+
+  // Append the encodingList to the 'encodings' div
+  encodingsDiv.appendChild(encodingList);
+}
