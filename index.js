@@ -1,5 +1,9 @@
 const recordButton = document.getElementById('record-button');
 const apiKey = document.getElementById('api-key')
+const result = document.getElementById('result')
+const recognized = document.getElementById('recognized')
+const correctEl = document.getElementById('correct')
+
 let mediaRecorder;
 let chunks = [];
 A = [
@@ -57,7 +61,9 @@ recordButton.addEventListener('click', () => {
           console.log(`API Response: ${response}`);
           console.log(`Correct words: ${correct}`);
           // fill the result id with a % of correct words
-          document.getElementById('result').innerText = `${correct.length / A.length * 100}%`;
+          result.innerText = `${correct.length / A.length * 100}%`;
+          recognized.innerText = `Recognized: ${response}`;
+          correctEl.innerText = `Correct: ${correct}`;
           recordButton.innerText = 'Record';
         })
         .catch(error => {
