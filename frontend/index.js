@@ -1,4 +1,5 @@
 const recordButton = document.getElementById('record-button');
+const apiKey = document.getElementById('api-key')
 let mediaRecorder;
 let chunks = [];
 A = [
@@ -39,6 +40,7 @@ recordButton.addEventListener('click', () => {
       mediaRecorder.addEventListener('stop', () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
         const formData = new FormData();
+        formData.append('api_key', apiKey.value);
         formData.append('audio', blob, 'recording.webm');
         
         fetch('http://localhost:3000', {

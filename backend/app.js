@@ -5,7 +5,7 @@ const { readFileSync } = require('fs');
 const { Storage } = require('@google-cloud/storage');
 const multer = require('multer');
 
-const key = JSON.parse(readFileSync('google-key.json'))
+const key = JSON.parse(process.env.GOOGLE_API_KEY)
 const projectId = 'prime-freedom-402713'
 const speechClient = new SpeechClient({ credentials: key, projectId });
 const app = express()
@@ -18,6 +18,16 @@ app.use(cors());
 
 app.post('/', upload.single('audio'), async (req, res) => {
   try {
+    // Simple API Key authentication
+    const apiKey = req.body.api_key;
+    // using a random md5 hash as the fallback API key for now
+    const validApiKey = process.env.API_KEY || '5cbd71ebb6f4cc93391abd8ca3e5f8e9';
+
+    if (!apiKey || apiKey !== validApiKey) {
+      res.status(401).json({ error: 'Invalid API key' });
+      return;
+    } 
+
     // Retrieve the audio data sent from the SPA and store it in google cloud storage
     const file = req.file;
     const blob = bucket.file('audio.webm');
