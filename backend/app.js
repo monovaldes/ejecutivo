@@ -47,7 +47,7 @@ app.post('/', upload.single('audio'), async (req, res) => {
     };
     const config = {
       encoding: req.body.encoding || 'AAC',
-      sampleRateHertz: req.body.sample_rate || '44100',
+      sampleRateHertz: req.body.sample_rate || '48000',
       languageCode: 'es-CL',
     };
 
