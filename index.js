@@ -6,25 +6,71 @@ const correctEl = document.getElementById('correct')
 
 let mediaRecorder;
 let chunks = [];
-A = [
+WORDS = [
+  //  A
   'armonía', 'agrupación', 'asociación', 'abeja', 'arveja',
   'anteojos', 'antiparras', 'ancla', 'alcaparra', 'aceptar',
-  'aceptación', 'ancestro', 'Antropología', 'antropólogo',
+  'aceptación', 'ancestro', 'antropología', 'antropólogo',
   'avion', 'arco', 'arquero', 'arremetida', 'agregar', 'ajedrez',
   'ajenjo', 'acelga', 'apio', 'aceituna', 'agua', 'albahaca',
   'alarma', 'asno', 'arepa', 'asma', 'alcachofa', 'avena', 'alegría',
-  'amarillo', 'azul', 'ayer', 'asiento', 'animal', 'artimaña', 'abrir'
-].map(word => word.replace(/s$]/g,""));
+  'amarillo', 'azul', 'ayer', 'asiento', 'animal', 'artimaña', 'abrir',
+  // B
+  'burro', 'bicicleta', 'banco', 'banca', 'barco', 'boletero', 'brillo', 'birillante',
+  'barcaza', 'borrador', 'blanco', 'bahia', 'berenjena', 'banana', 'blasfemia', 'bebé',
+  'bicho', 'borrego', 'bolso', 'berro', 'bulicio', 'bulla', 'buho', 'bohemia', 'botella',
+  'botillerría', 'ballena', 'bestia', 'bonita', 'bella', 'bailarina', 'bruto',
+  'brutalidad', 'belleza', 'bello', 'baile', 'boleta', 'billetera', 'bolso', 'bola',
+  // C
+  'casa', 'caballo', 'cristiano', 'castillo', 'carroza', 'cresta', 'cría', 'cactus', 'carruaje',
+  'costa', 'cosa', 'camilla', 'católico', 'caca', 'comunicación', 'costo', 'costura', 'carabinero',
+  'copa', 'copón', 'colegio', 'colega', 'contador', 'contaduría', 'corredor', 'correr', 'corregir',
+  'callampa', 'camello', 'cajón', 'catastro', 'canción', 'castillo', 'callejón', 'contrato',
+  'contratación', 'café', 'color', 'colorido', 'coliflor',
+  // D
+  'dedo', 'dedal', 'dado', 'dólar', 'doméstico', 'democracia', 'democrático', 'distribución',
+  'dignidad', 'dolor', 'danza', 'debilidad', 'doctor', 'doctorado', 'discriminación',
+  'dicción', 'detección', 'domesticación', 'de', 'destrucción', 'donar', 'donación', 'diversidad', 'dúo',
+  'dos', 'daño', 'determinación', 'determinante', 'dogmático', 'diplomático', 'diplomacia',
+  'derecho', 'delegado', 'delgado', 'durazno', 'damasco', 'droga', 'droggadicción', 'drama', 'dramático'
+].map(word => word.replace(/s$]/g, "")).map(word => word.toLowerCase());
 let respose;
+
+
+function fill_result(uniques) {
+  correct = uniques.filter(word => WORDS.includes(word));
+  incorrect = uniques.filter(word => !WORDS.includes(word));
+  // fill the result id with a % of correct words
+  result.innerText = `${correct.length}/40 (${(correct.length / 40) * 100}%)`;
+  
+  // Display all the words starting with the fist letter of the first recognized word,
+  // and the words that are within the correct array should be blue and underlined
+  all_words = WORDS.filter(word => word.startsWith(correct[0][0]));
+  list = all_words.map(word => {
+    if (correct.includes(word)) {
+      return `<span style="color: blue; text-decoration: underline;">${word}</span>`
+    }
+    return word;
+  });
+  recognized.innerHTML = list.join(', ');
+  // Display all the words that are not within the correct array in red
+  errlist = incorrect.map(word => `<span style="color: red;">${word}</span>`);
+  correctEl.innerHTML = `Misrecognized: ${errlist.join(', ')}`;
+}
 
 recordButton.addEventListener('click', () => {
   document.getElementById('result').innerText = '';
+  //clear result, recognized and correct
+  result.innerHTML = '';
+  recognized.innerHTML = '';
+  correctEl.innerHTML = ''; 
+
   if (mediaRecorder && mediaRecorder.state === 'recording') {
     mediaRecorder.stop();
     recordButton.innerText = 'Sending...';
     return;
   }
-  
+
   navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
       recordButton.innerText = 'Stop';
@@ -36,11 +82,11 @@ recordButton.addEventListener('click', () => {
       setTimeout(() => {
         mediaRecorder.stop();
       }, 60000);
-      
+
       mediaRecorder.addEventListener('dataavailable', e => {
         chunks.push(e.data);
       });
-      
+
       mediaRecorder.addEventListener('stop', () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
         const formData = new FormData();
@@ -51,30 +97,24 @@ recordButton.addEventListener('click', () => {
           method: 'POST',
           body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-          if(data.transcription) {
-            response = data.transcription.split(' ')
-              .map(word => word.toLowerCase())
-              .map(word => word.replace(/s$]/g,""));
-            uniques = [...new Set(response)]
-            correct = uniques.filter(word => A.includes(word));
-            console.log(`API Response: ${response}`);
-            console.log(`Correct words: ${correct}`);
-            // fill the result id with a % of correct words
-            result.innerText = `${correct.length / A.length * 100}%`;
-            recognized.innerText = `Recognized: ${response}`;
-            correctEl.innerText = `Correct: ${correct}`;
-          } else{
-            result.innerText = 'Unknown Error';
-          }
+          .then(response => response.json())
+          .then(data => {
+            if (data.transcription) {
+              response = data.transcription.split(' ')
+                .map(word => word.toLowerCase())
+                .map(word => word.replace(/s$]/g, ""));
+              uniques = [...new Set(response)]
+              fill_result(uniques)
+            } else {
+              result.innerText = 'Unknown Error';
+            }
 
-          recordButton.innerText = 'Record';
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          recordButton.innerText = 'Record';
-        });
+            recordButton.innerText = 'Record';
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            recordButton.innerText = 'Record';
+          });
       });
     })
     .catch(error => {
