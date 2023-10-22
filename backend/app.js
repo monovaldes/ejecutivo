@@ -46,8 +46,6 @@ app.post('/', upload.single('audio'), async (req, res) => {
       uri: 'gs://ejecutivoaudiofiles/audio.webm'
     };
     const config = {
-      encoding: req.body.encoding || 'AAC',
-      sampleRateHertz: req.body.sample_rate || '48000',
       languageCode: 'es-CL',
     };
 
