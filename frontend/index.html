@@ -11,10 +11,16 @@
   </head>
 
   <body>
-    <div id="app"  class="flex items-center justify-center h-screen">
-      <button id="record-button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+    <div id="app" class="flex flex-col items-center justify-center h-screen">
+      <button
+        id="record-button"
+        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mb-4"
+      >
         Record
       </button>
+      <div id="response-block" class="flex flex-col items-center">
+        <h1 id="result" class="mb-4"></h1>
+      </div>
     </div>
     <script src="index.js"></script>
   </body>
