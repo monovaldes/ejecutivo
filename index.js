@@ -57,17 +57,22 @@ recordButton.addEventListener('click', () => {
         })
         .then(response => response.json())
         .then(data => {
-          response = data.transcription.split(' ')
-            .map(word => word.toLowerCase())
-            .map(word => word.replace(/s$]/g,""));
-          uniques = [...new Set(response)]
-          correct = uniques.filter(word => A.includes(word));
-          console.log(`API Response: ${response}`);
-          console.log(`Correct words: ${correct}`);
-          // fill the result id with a % of correct words
-          result.innerText = `${correct.length / A.length * 100}%`;
-          recognized.innerText = `Recognized: ${response}`;
-          correctEl.innerText = `Correct: ${correct}`;
+          if(data.transcription) {
+            response = data.transcription.split(' ')
+              .map(word => word.toLowerCase())
+              .map(word => word.replace(/s$]/g,""));
+            uniques = [...new Set(response)]
+            correct = uniques.filter(word => A.includes(word));
+            console.log(`API Response: ${response}`);
+            console.log(`Correct words: ${correct}`);
+            // fill the result id with a % of correct words
+            result.innerText = `${correct.length / A.length * 100}%`;
+            recognized.innerText = `Recognized: ${response}`;
+            correctEl.innerText = `Correct: ${correct}`;
+          } else{
+            result.innerText = 'Unknown Error';
+          }
+
           recordButton.innerText = 'Record';
         })
         .catch(error => {
