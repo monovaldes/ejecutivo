@@ -13,13 +13,9 @@ const app = express()
 const port = 8080
 const upload = multer({dest: '/tmp/ejecutivo/'});
 const storage = new Storage({ credentials: key, projectId });
-const bucket = storage.bucket('ejecutivoaudiofiles');
+const bucket = storage.bucket('ejecutivoweb');
 
 app.use(cors());
-
-app.get('/', (req, res) => {
-  res.redirect('https://www.doctoralia.cl/camila-guerra/psicologo/santiago');
-})
 
 app.post('/', upload.single('audio'), async (req, res) => {
   try {
@@ -74,7 +70,7 @@ app.post('/', upload.single('audio'), async (req, res) => {
     
     // Set the audio content and encoding for the request
     const audio = {
-      uri: 'gs://ejecutivoaudiofiles/audio.wav'
+      uri: 'gs://ejecutivoweb/audio.wav'
     };
     const config = {
       languageCode: 'es-CL',

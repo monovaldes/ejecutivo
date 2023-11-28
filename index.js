@@ -93,7 +93,7 @@ recordButton.addEventListener('click', () => {
         formData.append('api_key', apiKey.value);
         formData.append('audio', blob, 'recording.webm');
 
-        fetch('https://ejecutivoapi.camiguerra.cl', {
+        fetch('https://api.camiguerra.cl', {
           method: 'POST',
           body: formData
         })
