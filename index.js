@@ -1,8 +1,8 @@
 const recordButton = document.getElementById('record-button');
-const apiKey = document.getElementById('api-key')
+const apiKeyInput = document.getElementById('api-key')
 const result = document.getElementById('result')
 const recognized = document.getElementById('recognized')
-const correctEl = document.getElementById('correct')
+const incorrect = document.getElementById('incorrect')
 
 let mediaRecorder;
 let chunks = [];
@@ -36,7 +36,7 @@ WORDS = [
 ].map(word => word.replace(/s$]/g, "")).map(word => word.toLowerCase());
 let respose;
 
-
+// Fill the result id with a % of correct words
 function fill_result(uniques) {
   correct = uniques.filter(word => WORDS.includes(word));
   incorrect = uniques.filter(word => !WORDS.includes(word));
@@ -45,25 +45,26 @@ function fill_result(uniques) {
   
   // Display all the words starting with the fist letter of the first recognized word,
   // and the words that are within the correct array should be blue and underlined
-  all_words = WORDS.filter(word => word.startsWith(correct[0][0]));
+  all_words = WORDS.filter(word => word.startsWith(correct[0][0])).sort();
   list = all_words.map(word => {
     if (correct.includes(word)) {
-      return `<span style="color: blue; text-decoration: underline;">${word}</span>`
+      return `<li><span style="color: blue; text-decoration: underline;">${word}</span></li>`
     }
-    return word;
+    return `<li>${word}</li>`;
   });
-  recognized.innerHTML = list.join(', ');
+  recognized.innerHTML = `<ul>${list.join('')}</ul>`;
   // Display all the words that are not within the correct array in red
-  errlist = incorrect.map(word => `<span style="color: red;">${word}</span>`);
-  correctEl.innerHTML = `Misrecognized: ${errlist.join(', ')}`;
+  errlist = incorrect.sort().map(word => `<li><span style="color: red;">${word}</span></li>`);
+  incorrect.innerHTML = `Misrecognized: <ul>${errlist.join('')}</ul>`;
 }
 
+// Record audio and send it to the server
 recordButton.addEventListener('click', () => {
   document.getElementById('result').innerText = '';
   //clear result, recognized and correct
   result.innerHTML = '';
   recognized.innerHTML = '';
-  correctEl.innerHTML = ''; 
+  incorrect.innerHTML = ''; 
 
   if (mediaRecorder && mediaRecorder.state === 'recording') {
     mediaRecorder.stop();
@@ -88,11 +89,9 @@ recordButton.addEventListener('click', () => {
       });
 
       mediaRecorder.addEventListener('stop', () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
         const formData = new FormData();
-        formData.append('api_key', apiKey.value);
-        formData.append('audio', blob, 'recording.webm');
-
+        const apiKey = localStorage.getItem('api_key') || apiKeyInput.value;
+        formData.append('api_key', apiKeyInput.value);
         fetch('https://api.camiguerra.cl', {
           method: 'POST',
           body: formData
@@ -100,6 +99,7 @@ recordButton.addEventListener('click', () => {
           .then(response => response.json())
           .then(data => {
             if (data.transcription) {
+              localStorage.setItem('api_key', apiKey);
               response = data.transcription.split(' ')
                 .map(word => word.toLowerCase())
                 .map(word => word.replace(/s$]/g, ""));
@@ -120,4 +120,12 @@ recordButton.addEventListener('click', () => {
     .catch(error => {
       console.error('Error:', error);
     });
+});
+
+// Hide the api key input if the user already has an api key
+window.addEventListener('load', function() {
+  const apiKey = localStorage.getItem('api_key');
+  if (apiKey) {
+    document.getElementById('api-key').style.display = 'none';
+  }
 });
