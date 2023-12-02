@@ -2,7 +2,7 @@ const recordButton = document.getElementById('record-button');
 const apiKeyInput = document.getElementById('api-key')
 const result = document.getElementById('result')
 const recognized = document.getElementById('recognized')
-const incorrect = document.getElementById('incorrect')
+const incorrectEl = document.getElementById('incorrect')
 
 let mediaRecorder;
 let chunks = [];
@@ -55,7 +55,7 @@ function fill_result(uniques) {
   recognized.innerHTML = `<ul>${list.join('')}</ul>`;
   // Display all the words that are not within the correct array in red
   errlist = incorrect.sort().map(word => `<li><span style="color: red;">${word}</span></li>`);
-  incorrect.innerHTML = `Misrecognized: <ul>${errlist.join('')}</ul>`;
+  incorrectEl.innerHTML = `Misrecognized: <ul>${errlist.join('')}</ul>`;
 }
 
 // Record audio and send it to the server
@@ -64,7 +64,7 @@ recordButton.addEventListener('click', () => {
   //clear result, recognized and correct
   result.innerHTML = '';
   recognized.innerHTML = '';
-  incorrect.innerHTML = ''; 
+  incorrectEl.innerHTML = ''; 
 
   if (mediaRecorder && mediaRecorder.state === 'recording') {
     mediaRecorder.stop();
