@@ -92,7 +92,7 @@ recordButton.addEventListener('click', () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
         const formData = new FormData();
         let apiKey = localStorage.getItem('api_key') || apiKeyInput.value;
-        formData.append('api_key', apiKeyInput.value);
+        formData.append('api_key', apiKey);
         formData.append('audio', blob, 'recording.webm');
         fetch('https://api.camiguerra.cl', {
           method: 'POST',
