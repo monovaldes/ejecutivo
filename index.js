@@ -91,7 +91,7 @@ recordButton.addEventListener('click', () => {
       mediaRecorder.addEventListener('stop', () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
         const formData = new FormData();
-        const apiKey = localStorage.getItem('api_key') || apiKeyInput.value;
+        let apiKey = localStorage.getItem('api_key') || apiKeyInput.value;
         formData.append('api_key', apiKeyInput.value);
         formData.append('audio', blob, 'recording.webm');
         fetch('https://api.camiguerra.cl', {
@@ -126,8 +126,8 @@ recordButton.addEventListener('click', () => {
 
 // Hide the api key input if the user already has an api key
 window.addEventListener('load', function() {
-  const apiKey = localStorage.getItem('api_key');
-  if (apiKey) {
+  let api_key_localstorage = localStorage.getItem('api_key');
+  if (api_key_localstorage) {
     document.getElementById('api-key').style.display = 'none';
   }
 });
